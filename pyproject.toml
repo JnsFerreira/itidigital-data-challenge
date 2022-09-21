@@ -1,0 +1,17 @@
+[tool.poetry]
+name = "itidigital-data-challenge"
+version = "0.1.0"
+description = ""
+authors = ["Jonas Ferreira"]
+readme = "README.md"
+packages = [{include = "itidigital_data_challenge"}]
+
+[tool.poetry.dependencies]
+python = "^3.10"
+boto3 = "^1.24.77"
+moto = "^4.0.5"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
