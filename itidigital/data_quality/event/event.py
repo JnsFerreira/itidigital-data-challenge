@@ -7,7 +7,7 @@ from itidigital.data_quality.schema.event import EventSchema
 
 class FieldType(enum.Enum):
     STRING = enum.auto()
-    INT = enum.auto()
+    INTEGER = enum.auto()
     OBJECT = enum.auto()
     ARRAY = enum.auto()
     BOOLEAN = enum.auto()
