@@ -1,17 +1,57 @@
-from itidigital.data_quality.schema.event import EventSchema
 from itidigital.data_quality.event.event import Event
+from itidigital.data_quality.schema.event import EventSchema
+from itidigital.data_quality.schema.builder import SchemaBuilder
+from itidigital.data_quality.event.exceptions import InvalidSchemaObject
 
 
 class EventValidator:
-    schema: EventSchema
+    """
+    Event validator class
+    """
+    def __init__(self, schema: EventSchema):
+        """
+        Initializes `EventValidator` class
 
-    def validate(self, event: Event):
-        ...
+        Args:
+            schema (EventSchema): schema to be used as reference to validate events
+        """
+        self._schema = schema
 
-    def _validate_field_type(self):
-        ...
+    @property
+    def schema(self) -> EventSchema:
+        """Schema property"""
+        return self._schema
 
-    def _validate_required_field(self):
-        ...
-    
-    
+    @schema.setter
+    def schema(self, new_schema: EventSchema) -> None:
+        """
+        Setter method for schema property
+
+        Args:
+            new_schema (EventSchema): new schema to be set as reference schema
+
+        Returns
+            None
+        """
+        if not isinstance(new_schema, EventSchema):
+            raise InvalidSchemaObject(
+                f"Schema should be of type EventSchema, but got {type(new_schema)}"
+            )
+
+        self._schema = new_schema
+
+    def is_valid(self, event: Event) -> bool:
+        """
+        Validates if a given event conforms to a defined schema
+
+        Args:
+            event (Event): event to be checked
+
+        Returns:
+            bool: True if event schema matches the defined schema. Otherwise, False
+        """
+        event_schema = SchemaBuilder(
+            config=event.json_schema
+        ).construct()
+
+        return event_schema == self._schema
