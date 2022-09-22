@@ -1,17 +1,19 @@
 import boto3
 from moto import mock_sqs
 
-import challenge_1.event_validator as event_validator
+import itidigital.data_quality.event_validator as event_validator
+
 
 @mock_sqs
-def main(event):
+def main(raw_event: dict):
     _SQS_CLIENT = boto3.client('sqs', region_name='us-east-1')
     _SQS_CLIENT.create_queue(
         QueueName='valid-events-queue'
     )
     event_validator._SQS_CLIENT = _SQS_CLIENT
-    event_validator.handler(event)
-    
+    event_validator.handler(raw_event)
+
+
 if __name__ == "__main__":
     event = {
         "eid": "3e628a05-7a4a-4bf3-8770-084c11601a12",
@@ -24,4 +26,5 @@ if __name__ == "__main__":
             "mailAddress": True
         }
     }
-    main(event)
+
+    main(raw_event=event)
