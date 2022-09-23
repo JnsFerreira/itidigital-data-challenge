@@ -3,8 +3,8 @@
 from typing import List
 
 from itidigital.data_quality.event.event import FieldType
-from itidigital.data_quality.builder.base import BaseBuilder
-from itidigital.data_quality.schema.event import EventSchema, SchemaField, ObjectField
+from itidigital.utils.builder.base import BaseBuilder
+from itidigital.utils.schema.event import EventSchema, SchemaField, ObjectField
 
 
 class SchemaFieldBuilder(BaseBuilder):
