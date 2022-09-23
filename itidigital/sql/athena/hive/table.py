@@ -3,7 +3,7 @@ from typing import Union, Mapping, Tuple, Optional, List
 
 
 from itidigital.sql.athena.hive.properties import *
-from itidigital.sql.athena.exceptions import InvalidS3LocationError
+from itidigital.sql.athena.exceptions import InvalidS3LocationError, InvalidRowFormatError
 
 
 class HiveTable:
@@ -110,7 +110,6 @@ class HiveTable:
     @property
     def partition_by(self) -> str:
         if self._partition_by:
-            print(self._partition_by)
             return ','.join([field for field in self._partition_by])
 
     @property
@@ -139,14 +138,13 @@ class HiveTable:
             return f"{delimiter} {char}"
 
         else:
-            raise TypeError(
+            raise InvalidRowFormatError(
                 f"Expected `SerdeFormat` or `DelimiterFormat`, but got {type(self._row_format)}"
             )
 
     @property
     def location(self) -> str:
         s3_location = self._location
-        print(s3_location)
 
         if not s3_location.startswith('s3://'):
             raise InvalidS3LocationError(
