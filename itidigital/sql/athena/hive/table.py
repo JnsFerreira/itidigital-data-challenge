@@ -1,12 +1,21 @@
+import os
+import pathlib
 import jinja2
 from typing import Union, Mapping, Tuple, Optional, List
 
-
-from itidigital.sql.athena.hive.properties import *
 from itidigital.sql.athena.exceptions import InvalidS3LocationError, InvalidRowFormatError
+from itidigital.sql.athena.hive.properties import (
+    CreateDisposition, TableReference, FileFormat, SerdeFormat, DelimiterFormat
+)
 
 
 class HiveTable:
+    """Represents a hive table and it's properties"""
+    _TEMPLATE_PATH = os.path.join(
+        pathlib.Path.cwd(),
+        'athena/statement_templates'
+    )
+
     def __init__(
         self,
         create_disposition: CreateDisposition,
@@ -21,7 +30,41 @@ class HiveTable:
         num_buckets: int = None,
         row_format: Union[SerdeFormat, DelimiterFormat] = None,
         table_properties: dict = None
-    ):
+    ) -> None:
+        """
+        Initializes `HiveTable` class
+
+        Args:
+            create_disposition (CreateDisposition): Causes the error message to be suppressed if a table named
+                table_name already exists.
+
+            table_reference (TableReference): Causes the error message to be suppressed if a table named
+                table_name already exists.
+
+            fields (Mapping): Specifies the name for each column to be created, along with the column's data type
+
+            is_external (bool): Specifies that the table is based on an underlying data file that exists in Amazon S3 or
+                is managed by Athena
+
+            location (str): Specifies the location of the underlying data in Amazon S3 from which the table is created
+
+            stored_as (FileFormat): Specifies the file format for table data. If omitted, TEXTFILE is the default
+
+            comment (Optional[str]): Creates the comment table property and populates it with the comment you specify.
+
+            partition_by (Optional[List[str]]): Creates a partitioned table with one or more partition columns
+
+            clustered_by (Optional[List[str]]): Divides, with or without partitioning, the data in the specified
+                col_name columns into data subsets called buckets.
+
+            num_buckets (int): The num_buckets parameter specifies the number of buckets to create
+
+            row_format (Union[SerdeFormat, DelimiterFormat]): Specifies the row format of the table and its underlying
+                source data if applicable
+
+            table_properties (dict): Specifies custom metadata key-value pairs for the table definition in addition to
+                predefined table properties, such as "comment".
+        """
         self._create_disposition = create_disposition
         self._table_reference = table_reference
         self._fields = fields
@@ -37,13 +80,14 @@ class HiveTable:
 
     @property
     def ddl_statement(self) -> str:
-        # TODO: Adjust templates folder
-        env = jinja2.Environment(
-            loader=jinja2.FileSystemLoader(
-                '/home/jns/Documents/repos/itidigital-data-challenge/itidigital/sql/athena/statement_templates/'
-            )
-        )
+        """
+        Generates a DDL statement for hive table
 
+        Returns:
+            str: DDL statement
+        """
+        loader = jinja2.FileSystemLoader(searchpath=self._TEMPLATE_PATH)
+        env = jinja2.Environment(loader=loader)
         template = env.get_template(name='ddl.txt')
 
         return template.render(
@@ -63,14 +107,17 @@ class HiveTable:
 
     @property
     def table_type(self):
+        """Hive table type property"""
         return 'EXTERNAL TABLE' if self._is_external else 'TABLE'
 
     @property
     def create_disposition(self) -> str:
+        """Hive table creation disposition property"""
         return self._create_disposition.value
 
     @property
     def table_name(self) -> str:
+        """Hive table type property"""
         table = self._table_reference.table_name
         db = self._table_reference.database
 
@@ -85,11 +132,21 @@ class HiveTable:
 
     @property
     def fields(self) -> str:
+        """Hive table fields property"""
         return ', \n\t'.join(
             [self._parse_field(field) for field in self._fields.items()]
         )
 
     def _parse_field(self, field: Tuple) -> str:
+        """
+        Helper function to parse fields
+
+        Args:
+            field (Tuple): Name and attributes from a field
+
+        Returns
+            str: field formatted as string
+        """
         name, attr = field
         field_type = attr.get('type')
 
@@ -105,25 +162,30 @@ class HiveTable:
 
     @property
     def comment(self) -> str:
+        """Hive table comment property"""
         return self._comment
 
     @property
     def partition_by(self) -> str:
+        """Hive table partition property"""
         if self._partition_by:
             return ','.join([field for field in self._partition_by])
 
     @property
     def clustered_by(self) -> str:
+        """Hive table clustering property"""
         if self._clustered_by:
             return ','.join([field for field in self._clustered_by])
 
     @property
     def num_buckets(self) -> int:
+        """Hive table buckets property"""
         if self._num_buckets:
             return self._num_buckets
 
     @property
     def row_format(self) -> str:
+        """Hive table row format property"""
         if isinstance(self._row_format, SerdeFormat):
             properties = self._row_format.properties
             serde_name = self._row_format.name
@@ -144,6 +206,7 @@ class HiveTable:
 
     @property
     def location(self) -> str:
+        """Hive table location property"""
         s3_location = self._location
 
         if not s3_location.startswith('s3://'):
@@ -160,10 +223,12 @@ class HiveTable:
 
     @property
     def stored_as(self) -> str:
+        """Hive table stored format property"""
         return self._stored_as.value
 
     @property
     def table_properties(self):
+        """Hive table properties"""
         if self._table_properties:
             return ",\n\t".join(
                 [f"{name} = {value}" for name, value in self._table_properties.items()]
