@@ -2,7 +2,6 @@ import enum
 from typing import Optional
 from dataclasses import dataclass
 
-
 __all__ = [
     'Classification',
     'TableProperties',
@@ -16,37 +15,22 @@ __all__ = [
 
 
 class Delimiter(enum.Enum):
-    DELIMITED_FIELDS_TERMINATED_BY ="DELIMITED FIELDS TERMINATED BY"
+    """All possible delimiter row types"""
+    DELIMITED_FIELDS_TERMINATED_BY = "DELIMITED FIELDS TERMINATED BY"
     DELIMITED_COLLECTION_ITEMS_TERMINATED_BY = "DELIMITED COLLECTION ITEMS TERMINATED BY"
     MAP_KEYS_TERMINATED_BY = "MAP KEYS TERMINATED BY"
     LINES_TERMINATED_BY = "LINES TERMINATED BY"
     NULL_DEFINED_AS = "NULL DEFINED AS"
 
 
-@dataclass
-class DelimiterFormat:
-    delimiter: Delimiter
-    char: str
-
-
-@dataclass
-class SerdeFormat:
-    name: str
-    properties: dict
-
-
-@dataclass
-class TableReference:
-    table_name: str
-    database: Optional[str] = None
-
-
 class CreateDisposition(enum.Enum):
+    """All possible creation disposition values"""
     IF_NOT_EXISTS = 'IF NOT EXISTS'
     OVERWRITE = ''
 
 
 class FileFormat(enum.Enum):
+    """All possible file format values"""
     SEQUENCEFILE = 'sequencefile'
     TEXTFILE = 'textfile'
     RCFILE = 'rcfile'
@@ -59,6 +43,7 @@ class FileFormat(enum.Enum):
 
 
 class Classification(enum.Enum):
+    """All possible classification values"""
     CSV = 'csv'
     PARQUET = 'parquet'
     ORC = 'orc'
@@ -67,6 +52,28 @@ class Classification(enum.Enum):
 
 
 @dataclass
+class DelimiterFormat:
+    """Delimiter row format structure"""
+    delimiter: Delimiter
+    char: str
+
+
+@dataclass
+class SerdeFormat:
+    """SerDe row format data structure"""
+    name: str
+    properties: dict
+
+
+@dataclass
+class TableReference:
+    """Table reference data structure"""
+    table_name: str
+    database: Optional[str] = None
+
+
+@dataclass
 class TableProperties:
+    """Table properties data structure"""
     classification: Classification
     has_encrypted_data: Optional[bool] = False
