@@ -1,19 +1,14 @@
 import json
 import boto3
 
-
-from itidigital.data_quality.schema.builder import SchemaBuilder
+from itidigital.utils.schema import helpers
+from itidigital.utils.schema.builder import SchemaBuilder
 from itidigital.data_quality.event.builder import EventBuilder
 from itidigital.data_quality.event.validator import EventValidator
 
 _SQS_CLIENT = None
 _VALID_EVENTS_QUEUE_NAME = 'valid-events-queue'
 _SCHEMA_FILE_PATH = 'schema.json'
-
-
-def load_schema(file_path: str) -> dict:
-    with open(file_path, 'r') as schema_file:
-        return json.loads(schema_file.read())
 
 
 def send_event_to_queue(event, queue_name):
@@ -46,7 +41,7 @@ def handler(raw_event):
     """
     # TODO: separate obj creation from usage
 
-    raw_schema = load_schema(file_path=_SCHEMA_FILE_PATH)
+    raw_schema = helpers.load_schema(file_path=_SCHEMA_FILE_PATH)
 
     event = EventBuilder(config=raw_event).construct()
     schema = SchemaBuilder(config=raw_schema).construct()
