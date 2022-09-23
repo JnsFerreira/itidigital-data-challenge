@@ -2,7 +2,7 @@
 
 from typing import Any, List
 
-from itidigital.data_quality.builder.base import BaseBuilder
+from itidigital.utils.builder.base import BaseBuilder
 from itidigital.data_quality.event.event import (
     Event,
     EventField,
