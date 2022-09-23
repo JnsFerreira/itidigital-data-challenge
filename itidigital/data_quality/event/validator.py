@@ -1,6 +1,6 @@
 from itidigital.data_quality.event.event import Event
-from itidigital.data_quality.schema.event import EventSchema
-from itidigital.data_quality.schema.builder import SchemaBuilder
+from itidigital.utils.schema.event import EventSchema
+from itidigital.utils.schema.builder import SchemaBuilder
 from itidigital.data_quality.event.exceptions import InvalidSchemaObject
 
 
