@@ -1,8 +1,8 @@
 import os
-import pathlib
 import jinja2
 from typing import Union, Mapping, Tuple, Optional, List
 
+from itidigital.variables import PROJECT_ROOT_PATH
 from itidigital.sql.athena.exceptions import InvalidS3LocationError, InvalidRowFormatError
 from itidigital.sql.athena.hive.properties import (
     CreateDisposition, TableReference, FileFormat, SerdeFormat, DelimiterFormat
@@ -12,8 +12,8 @@ from itidigital.sql.athena.hive.properties import (
 class HiveTable:
     """Represents a hive table and it's properties"""
     _TEMPLATE_PATH = os.path.join(
-        pathlib.Path.cwd(),
-        'athena/statement_templates'
+        PROJECT_ROOT_PATH,
+        'itidigital/sql/athena/statement_templates'
     )
 
     def __init__(
