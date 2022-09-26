@@ -1,6 +1,6 @@
 from itidigital.utils.schema import helpers
 from itidigital.utils.schema.builder import SchemaBuilder
-from itidigital.sql.athena.tools.json2hive import HiveTableCreator
+from itidigital.sql.athena.tools.hive_table_creator import HiveTableCreator
 
 _ATHENA_CLIENT = None
 _SCHEMA_FILE_PATH = 'schema.json'
