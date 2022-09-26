@@ -2,6 +2,12 @@ import enum
 from typing import List, Any
 from dataclasses import dataclass
 
+__all__ = [
+    'FieldType',
+    'EventField',
+    'Event'
+]
+
 
 class FieldType(enum.Enum):
     """Enum class that represents all types on JSON schema"""
@@ -160,5 +166,5 @@ class Event:
             "type": field.type.value,
             "title": f"{field.name} field",
             "description": f"{field.name} field of type {field.type.value}",
-            "examples": field.value
+            "examples": [field.value]
         }
