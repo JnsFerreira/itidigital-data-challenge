@@ -39,8 +39,6 @@ def handler(raw_event):
     Utilize a função send_event_to_queue para envio do evento para a fila,
         não é necessário alterá-la
     """
-    # TODO: separate obj creation from usage
-
     raw_schema = helpers.load_schema(file_path=_SCHEMA_FILE_PATH)
 
     event = EventBuilder(config=raw_event).construct()
