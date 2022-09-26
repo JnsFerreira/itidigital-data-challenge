@@ -1,9 +1,16 @@
+import os
+import pathlib
+
+from itidigital import variables
 from itidigital.utils.schema import helpers
 from itidigital.utils.schema.builder import SchemaBuilder
 from itidigital.sql.athena.tools.hive_table_creator import HiveTableCreator
 
 _ATHENA_CLIENT = None
-_SCHEMA_FILE_PATH = 'schema.json'
+_SCHEMA_FILE_PATH = os.path.join(
+        variables.PROJECT_ROOT_PATH,
+        'itidigital/sql/schema.json'
+)
 
 
 def create_hive_table_with_athena(query):

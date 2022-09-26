@@ -1,6 +1,8 @@
+import os
 import json
 import boto3
 
+from itidigital import variables
 from itidigital.utils.schema import helpers
 from itidigital.utils.schema.builder import SchemaBuilder
 from itidigital.data_quality.event.builder import EventBuilder
@@ -8,7 +10,11 @@ from itidigital.data_quality.event.validator import EventValidator
 
 _SQS_CLIENT = None
 _VALID_EVENTS_QUEUE_NAME = 'valid-events-queue'
-_SCHEMA_FILE_PATH = 'schema.json'
+_SCHEMA_FILE_PATH = os.path.join(
+        variables.PROJECT_ROOT_PATH,
+        'itidigital/data_quality/schema.json'
+)
+
 
 
 def send_event_to_queue(event, queue_name):
