@@ -1,3 +1,6 @@
+from itidigital.sql.athena.hive.properties import *
+
+
 EXAMPLE_SCHEMA = {
     "$schema": "http://json-schema.org/draft-07/schema",
     "$id": "http://example.com/example.json",
@@ -102,3 +105,28 @@ EXAMPLE_EVENT = {
         "mailAddress": True
     }
 }
+
+TABLE_CONFIG = {
+        "location": 's3://my-bucket/my-table/',
+        "create_disposition": CreateDisposition.IF_NOT_EXISTS,
+        "table_reference": TableReference(
+            database='itidigital',
+            table_name='foo'
+        ),
+        "is_external": True,
+        "partition_by": ['eid'],
+        "clustered_by": ['documentNumber'],
+        "num_buckets": 5,
+        "row_format": SerdeFormat(
+            name="org.apache.hadoop.hive.serde2.lazy.LazySimpleSerDe",
+            properties={
+                "serialization.format": ",",
+                "field.delim": ",",
+                "collection.delim": "|",
+                "mapkey.delim": ":",
+                "escape.delim": "\\"
+            }
+        ),
+        "stored_as": FileFormat.PARQUET,
+        "table_properties": {"foo": "bar", "prop_name": "prop_value"}
+    }
