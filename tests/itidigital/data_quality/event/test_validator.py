@@ -1,6 +1,6 @@
 import pytest
 
-from tests.itidigital.data_quality.event.test_data import examples
+from tests.test_data import examples
 
 from itidigital.utils.schema.event import EventSchema
 from itidigital.utils.schema.builder import SchemaBuilder
@@ -10,6 +10,8 @@ from itidigital.data_quality.event.exceptions import InvalidSchemaObject
 
 
 class TestEventValidator:
+    """Test class for EventValidator"""
+
     @pytest.fixture
     def schema(self):
         """Fixture for Schema class example"""
