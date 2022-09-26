@@ -1,0 +1,22 @@
+CREATE {{ table_type }} {{creation_disposition }} {{ table_name }} (
+    {{ fields }}
+)
+{%- if comment %}
+COMMENT {{ comment }}
+{%- else %}{%- endif %}
+{%- if partition_by %}
+PARTITION BY {{ partition_by }}
+{%- else %}{%- endif %}
+{%- if clustered_by %}
+CLUSTERED BY {{ clustered_by }}{%- if num_buckets %} INTO {{ num_buckets }} BUCKETS{%- else %}{%- endif %}
+{%- else %}{%- endif %}
+{%- if row_format %}
+ROW FORMAT {{ row_format }}
+{%- else %}{%- endif %}
+STORED AS {{ stored_as }}
+LOCATION {{ location }}
+{%- if table_properties %}
+TBLPROPERTIES (
+    {{ table_properties }}
+)
+{%- else %}{%- endif %}
