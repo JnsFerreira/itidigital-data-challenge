@@ -21,6 +21,15 @@ class EventFieldBuilder(BaseBuilder):
         Args:
             config (dict): EventField attributes as dictionary.
 
+            ```
+            # expected format:
+            config = = {
+                "name": "foo",
+                "value": "bar"
+            }
+
+            ```
+
         Returns:
             None
         """
