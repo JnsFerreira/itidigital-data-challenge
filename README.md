@@ -4,7 +4,7 @@
 
 After clone it into your machine, go to project root folder.
 
-Make sure that you have poetry installed on your machine. If you do not have it, follow the instalation instruction [here](https://python-poetry.org/docs/#installation)
+Make sure that you have poetry installed on your machine. If you don't have it, follow the installation instruction [here](https://python-poetry.org/docs/#installation)
 
 
 ### Installing dependencies
