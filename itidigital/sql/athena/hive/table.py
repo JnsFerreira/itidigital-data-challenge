@@ -17,19 +17,19 @@ class HiveTable:
     )
 
     def __init__(
-        self,
-        create_disposition: CreateDisposition,
-        table_reference: TableReference,
-        fields: Mapping,
-        is_external: bool,
-        location: str,
-        stored_as: FileFormat = FileFormat.TEXTFILE,
-        comment: Optional[str] = None,
-        partition_by: Optional[List[str]] = None,
-        clustered_by: Optional[List[str]] = None,
-        num_buckets: int = None,
-        row_format: Union[SerdeFormat, DelimiterFormat] = None,
-        table_properties: dict = None
+            self,
+            create_disposition: CreateDisposition,
+            table_reference: TableReference,
+            fields: Mapping,
+            is_external: bool,
+            location: str,
+            stored_as: FileFormat = FileFormat.TEXTFILE,
+            comment: Optional[str] = None,
+            partition_by: Optional[List[str]] = None,
+            clustered_by: Optional[List[str]] = None,
+            num_buckets: int = None,
+            row_format: Union[SerdeFormat, DelimiterFormat] = None,
+            table_properties: dict = None
     ) -> None:
         """
         Initializes `HiveTable` class
@@ -137,7 +137,7 @@ class HiveTable:
             [self._parse_field(field) for field in self._fields.items()]
         )
 
-    def _parse_field(self, field: Tuple) -> str:
+    def _parse_field(self, field: Tuple[str, dict]) -> str:
         """
         Helper function to parse fields
 
@@ -199,7 +199,10 @@ class HiveTable:
 
             return f"{delimiter} {char}"
 
-        else:
+    @row_format.setter
+    def row_format(self, value):
+        if not isinstance(value, SerdeFormat) or \
+                isinstance(value, DelimiterFormat):
             raise InvalidRowFormatError(
                 f"Expected `SerdeFormat` or `DelimiterFormat`, but got {type(self._row_format)}"
             )
@@ -207,19 +210,19 @@ class HiveTable:
     @property
     def location(self) -> str:
         """Hive table location property"""
-        s3_location = self._location
+        return self._location
 
-        if not s3_location.startswith('s3://'):
+    @location.setter
+    def location(self, value: str) -> str:
+        if not value.startswith('s3://'):
             raise InvalidS3LocationError(
                 "S3 location must start with `s3://`"
             )
 
-        if not s3_location.endswith('/'):
+        if not value.endswith('/'):
             raise InvalidS3LocationError(
                 "S3 location must end with `/`"
             )
-
-        return s3_location
 
     @property
     def stored_as(self) -> str:
