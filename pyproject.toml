@@ -4,7 +4,10 @@ version = "0.1.0"
 description = ""
 authors = ["Jonas Ferreira"]
 readme = "README.md"
-packages = [{include = "itidigital_data_challenge"}]
+packages = [
+    {include = "itidigital"},
+
+]
 
 [tool.poetry.dependencies]
 python = "^3.10"
